@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-const { default: helmet } = require('helmet')
+const helmet = require('helmet')
 const compression = require('compression')
 const dotenv = require('dotenv')
 const { notFound, errorHandler } = require('./core/error')
