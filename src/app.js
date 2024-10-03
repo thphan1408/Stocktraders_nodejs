@@ -52,7 +52,7 @@ require('./db/init.mongo')
  * init routes
  */
 
-app.use('/api/v1', require('./routes/root.routes'))
+app.use('/', require('./routes/root.routes'))
 
 /**
  * handle errors

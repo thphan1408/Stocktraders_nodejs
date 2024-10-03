@@ -3,6 +3,6 @@ const tradersRoutes = require('./trade/trade.routes')
 
 const rootRoutes = express.Router()
 
-rootRoutes.use('/data', tradersRoutes)
+rootRoutes.use('/service/data', tradersRoutes)
 
 module.exports = rootRoutes
