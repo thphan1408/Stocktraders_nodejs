@@ -8,7 +8,7 @@ const { SuccessResponse } = require('../utils/success.response')
 const getAllTradeController = async (req, res, next) => {
   new SuccessResponse({
     message: 'Get data successfully',
-    metaData: await getAllTradeServices(),
+    metaData: await getAllTradeServices(req.body),
   }).send(res)
 }
 

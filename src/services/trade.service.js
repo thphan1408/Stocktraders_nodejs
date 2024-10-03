@@ -72,9 +72,9 @@ const getAllTradeServices = async () => {
 
         // Kiểm tra xem vol có giá trị hợp lệ không
         if (newTradeData.vol === null) {
-          console.warn(
-            `Skipping ${tradeItem.ticker}: vol is required but is null`,
-          )
+          // console.warn(
+          //   `Skipping ${tradeItem.ticker}: vol is required but is null`,
+          // )
           return // Không tạo tài liệu mới nếu vol là null
         }
 
@@ -85,10 +85,10 @@ const getAllTradeServices = async () => {
           // Cập nhật thông tin từ API 2 vào tài liệu
           Object.assign(existingTrade, newTradeData)
           await existingTrade.save()
-          console.log(
-            `Updated Trade from API2 for ${tradeItem.ticker}:`,
-            existingTrade,
-          )
+          // console.log(
+          //   `Updated Trade from API2 for ${tradeItem.ticker}:`,
+          //   existingTrade,
+          // )
         } else {
           // Nếu không tồn tại, tạo mới
           const newTrade = new Trade({
@@ -96,7 +96,7 @@ const getAllTradeServices = async () => {
             ...newTradeData,
           })
           await newTrade.save()
-          console.log(`Created new Trade for ${tradeItem.ticker}:`, newTrade)
+          // console.log(`Created new Trade for ${tradeItem.ticker}:`, newTrade)
         }
       })
     }
@@ -107,7 +107,8 @@ const getAllTradeServices = async () => {
       metaData,
     }
   } catch (error) {
-    console.error('Error in fetching data:', error)
+    // console.error('Error in fetching data:', error)
+    throw error
   }
 }
 
@@ -165,9 +166,9 @@ const getBuyToTradeServices = async () => {
 
         // Kiểm tra xem vol có giá trị hợp lệ không
         if (newTradeData.vol === null) {
-          console.warn(
-            `Skipping ${tradeItem.ticker}: vol is required but is null`,
-          )
+          // console.warn(
+          //   `Skipping ${tradeItem.ticker}: vol is required but is null`,
+          // )
           return // Không tạo tài liệu mới nếu vol là null
         }
 
@@ -180,10 +181,10 @@ const getBuyToTradeServices = async () => {
           // Cập nhật thông tin từ API 2 vào tài liệu
           Object.assign(existingTrade, newTradeData)
           await existingTrade.save()
-          console.log(
-            `Updated Trade from API2 for ${tradeItem.ticker}:`,
-            existingTrade,
-          )
+          // console.log(
+          //   `Updated Trade from API2 for ${tradeItem.ticker}:`,
+          //   existingTrade,
+          // )
         } else {
           // Nếu không tồn tại, tạo mới
           const newTrade = new BuyToTrade({
@@ -191,7 +192,7 @@ const getBuyToTradeServices = async () => {
             ...newTradeData,
           })
           await newTrade.save()
-          console.log(`Created new Trade for ${tradeItem.ticker}:`, newTrade)
+          // console.log(`Created new Trade for ${tradeItem.ticker}:`, newTrade)
         }
       })
     }
@@ -237,7 +238,7 @@ const getSellToTradeServices = async () => {
     // Xử lý dữ liệu từ API 1 để lấy vol
     if (Array.isArray(stockDataFromApi1)) {
       stockDataFromApi1.forEach((tradeItem) => {
-        console.log(`tradeItem 1:: `, tradeItem)
+        // console.log(`tradeItem 1:: `, tradeItem)
         // Lưu trữ vol theo ticker
         volByTicker[tradeItem.ticker] = tradeItem.vol
       })
@@ -260,9 +261,9 @@ const getSellToTradeServices = async () => {
 
         // Kiểm tra xem vol có giá trị hợp lệ không
         if (newTradeData.vol === null) {
-          console.warn(
-            `Skipping ${tradeItem.ticker}: vol is required but is null`,
-          )
+          // console.warn(
+          //   `Skipping ${tradeItem.ticker}: vol is required but is null`,
+          // )
           return // Không tạo tài liệu mới nếu vol là null
         }
 
@@ -276,7 +277,7 @@ const getSellToTradeServices = async () => {
           Object.assign(existingTrade, newTradeData)
           await existingTrade.save()
           console.log(
-            `Updated Trade from API2 for ${tradeItem.ticker}:`,
+            // `Updated Trade from API2 for ${tradeItem.ticker}:`,
             existingTrade,
           )
         } else {
@@ -286,7 +287,7 @@ const getSellToTradeServices = async () => {
             ...newTradeData,
           })
           await newTrade.save()
-          console.log(`Created new Trade for ${tradeItem.ticker}:`, newTrade)
+          // console.log(`Created new Trade for ${tradeItem.ticker}:`, newTrade)
         }
       })
     }

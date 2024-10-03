@@ -5,8 +5,7 @@ const compression = require('compression')
 const dotenv = require('dotenv')
 const { notFound, errorHandler } = require('./core/error')
 const app = express()
-const http = require('http')
-const { Server } = require('socket.io')
+
 // dotenv
 dotenv.config()
 
@@ -16,6 +15,7 @@ dotenv.config()
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(compression())
+app.use(express.json())
 
 /**
  * init db
@@ -25,33 +25,8 @@ require('./db/init.mongo')
 // checkOverload()
 
 /**
- * websocket connection
- */
-// const server = http.createServer(app)
-// const io = new Server(server)
-
-// io.on('connection', (socket) => {
-//   console.log('Websocket connected')
-
-//   socket.on('message', (message) => {
-//     console.log(`Received message => ${message}`)
-
-//     socket.emit('server received message', message)
-//   })
-
-//   socket.on('disconnected', () => {
-//     console.log('Websocket disconnected')
-//   })
-// })
-
-/**
- * fetch data from api realtime after 5s
- */
-
-/**
  * init routes
  */
-
 app.use('/', require('./routes/root.routes'))
 
 /**

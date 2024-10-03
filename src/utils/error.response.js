@@ -1,9 +1,9 @@
 'use strict'
 
-import {
+const {
   REASON_STATUS_CODE,
   STATUS_CODE,
-} from '../constants/values.constants.js'
+} = require('../constants/values.constants')
 
 // Khai báo class ErrorResponse kế thừa từ Error của nodejs
 class ErrorResponse extends Error {
