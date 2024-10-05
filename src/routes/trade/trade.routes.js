@@ -1,8 +1,9 @@
 const express = require('express')
 const {
-  getAllTradeController,
+  getDataHoldController,
   getDataBuyController,
   getDataSellController,
+  getDataSignalController,
 } = require('../../controllers/trade.controller')
 const {
   checkUserRights14,
@@ -15,6 +16,7 @@ const tradersRoutes = express.Router()
 // tradersRoutes.use(checkUserRights)
 tradersRoutes.post('/databuy', checkUserRights14, getDataBuyController)
 tradersRoutes.post('/datasell', checkUserRights15, getDataSellController)
-tradersRoutes.post('/datahold', checkUserRights16, getAllTradeController)
+tradersRoutes.post('/datahold', checkUserRights16, getDataHoldController)
+tradersRoutes.post('/datasignal', getDataSignalController)
 
 module.exports = tradersRoutes

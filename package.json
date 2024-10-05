@@ -7,7 +7,6 @@
     "start": "node server.js",
     "start:dev": "nodemon server.js",
     "build": "webpack --config webpack.config.js"
-
   },
   "keywords": [],
   "author": "",

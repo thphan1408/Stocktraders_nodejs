@@ -1,14 +1,15 @@
 const {
-  getAllTradeServices,
+  getDataHoldServices,
   getBuyToTradeServices,
   getSellToTradeServices,
+  getDataSignalServices,
 } = require('../services/trade.service')
 const { SuccessResponse } = require('../utils/success.response')
 
-const getAllTradeController = async (req, res, next) => {
+const getDataHoldController = async (req, res, next) => {
   new SuccessResponse({
     message: 'Get data successfully',
-    metaData: await getAllTradeServices(req.body),
+    metaData: await getDataHoldServices(),
   }).send(res)
 }
 
@@ -26,8 +27,16 @@ const getDataSellController = async (req, res, next) => {
   }).send(res)
 }
 
+const getDataSignalController = async (req, res, next) => {
+  new SuccessResponse({
+    message: 'Get data successfully',
+    metaData: await getDataSignalServices(req.body),
+  }).send(res)
+}
+
 module.exports = {
-  getAllTradeController,
+  getDataHoldController,
   getDataBuyController,
   getDataSellController,
+  getDataSignalController
 }

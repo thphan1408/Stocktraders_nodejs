@@ -2,15 +2,14 @@
 
 const { model, Schema } = require('mongoose')
 
-const DOCUMENT_NAME = 'DataBuy'
-const COLLECTION_NAME = 'dataBuys'
+const DOCUMENT_NAME = 'DataHold'
+const COLLECTION_NAME = 'dataHolds'
 
 // ticker, vol, price, ave, profit, change, percent
 
 // Declare the Schema of the Mongo model
-const dataBuySchema = new Schema(
+const dataHoldSchema = new Schema(
   {
-
     data: {
       type: [
         {
@@ -38,4 +37,4 @@ const dataBuySchema = new Schema(
 )
 
 //Export the model
-module.exports = model(DOCUMENT_NAME, dataBuySchema)
+module.exports = model(DOCUMENT_NAME, dataHoldSchema)

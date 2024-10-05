@@ -26,4 +26,22 @@ const REASON_STATUS_CODE = {
   NOT_FOUND: 'Not found',
 }
 
-module.exports = { STATUS_CODE, HEADER, REASON_STATUS_CODE }
+
+const _API_DATASELL =
+{
+  url: 'http://roboadvisor.vn/service/data/datasell',
+}
+
+const _API_DATA_BUY =
+{
+  url: 'http://roboadvisor.vn/service/data/databuy',
+
+}
+
+const _API_DATA_HOLD =
+{
+  url: 'http://roboadvisor.vn/service/data/datahold',
+}
+
+
+module.exports = { STATUS_CODE, HEADER, REASON_STATUS_CODE, _API_DATASELL, _API_DATA_BUY, _API_DATA_HOLD }

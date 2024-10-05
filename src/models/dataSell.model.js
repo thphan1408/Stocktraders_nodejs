@@ -8,39 +8,30 @@ const COLLECTION_NAME = 'dataSells'
 // ticker, vol, price, ave, profit, change, percent
 
 // Declare the Schema of the Mongo model
-var dataSellSchema = new Schema(
+const dataSellSchema = new Schema(
   {
-    ticker: {
+    data: {
+      type: [
+        {
+          ticker: { type: String },
+          vol: { type: Number },
+          price: { type: String },
+          ave: { type: String },
+          profit: { type: String },
+          change: { type: String },
+          percent: { type: String },
+        },
+      ],
+      required: true,
+      _id: false,
+    },
+    date: {
       type: String,
       required: true,
-    }, // Mã cổ phiếu
-    vol: {
-      type: Number,
-      required: true,
-    }, // Khối lượng giao dịch
-    price: {
-      type: String,
-      required: true,
-    }, // Giá giao dịch
-    ave: {
-      type: String,
-      required: true,
-    }, // Giá trung bình
-    profit: {
-      type: String,
-      required: true,
-    }, // Lợi nhuận
-    change: {
-      type: String,
-      required: true,
-    }, // Thay đổi
-    percent: {
-      type: String,
-      required: true,
-    }, // Phần trăm thay đổi
+    },
   },
   {
-    timestamp: true,
+    timestamps: true,
     collection: COLLECTION_NAME,
   },
 )
