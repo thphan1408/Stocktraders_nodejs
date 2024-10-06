@@ -9,6 +9,7 @@ const {
   checkUserRights14,
   checkUserRights15,
   checkUserRights16,
+  checkPermission,
 } = require('../../middlewares/checkPermission.middleware')
 
 const tradersRoutes = express.Router()

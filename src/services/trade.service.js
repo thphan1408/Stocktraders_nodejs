@@ -1,8 +1,11 @@
 const HoldToTrade = require('../models/dataHold.model')
 const BuyToTrade = require('../models/dataBuy.model')
 const SellToTrade = require('../models/dataSell.model')
+const SignalToTrade = require('../models/dataSignal.model')
 const { callApi } = require('../utils/apiCaller')
 const { _API_DATASELL, _API_DATA_BUY, _API_DATA_HOLD } = require('../constants/values.constants')
+const { getLastFriday } = require('../utils/dateUtils')
+const { checkPermission14, checkPermission15, checkPermission16, checkUserPermissions } = require('../auth/checkPermission')
 
 const _GET_ALL_TRADE = {
   url: 'https://stocktraders.vn/service/data/getTotalTradeReal',
@@ -362,45 +365,98 @@ const getDataSignalServices = async (body) => {
     {
       url: _API_DATASELL,
       signal: 'datasell',
+      checkPermission: checkPermission14, // Sử dụng hàm kiểm tra quyền tương ứng
     },
     {
       url: _API_DATA_BUY,
       signal: 'databuy',
+      checkPermission: checkPermission15, // Sử dụng hàm kiểm tra quyền tương ứng
     },
     {
       url: _API_DATA_HOLD,
       signal: 'datahold',
+      checkPermission: checkPermission16, // Sử dụng hàm kiểm tra quyền tương ứng
     },
-  ]
+  ];
 
   try {
-    const responses = await Promise.all(apiConfigs.map((config) => {
-      return callApi({
+
+    // Gọi các API mà user có quyền truy cập hoặc trả về mảng rỗng nếu không có quyền
+    const responses = await Promise.all(apiConfigs.map(async (config) => {
+      // Kiểm tra quyền trước khi gọi API
+      const hasPermission = await config.checkPermission(user);
+
+      // Nếu không có quyền thì trả về null để không gọi API và lưu vào DB và trả về lỗi
+      // Nếu không có quyền, trả về mã lỗi và thông báo cho API đó
+      if (hasPermission !== 1) {
+        return {
+          code: 403,
+          message: `You do not have permission to access the ${config.signal} resource.`,
+          signal: config.signal,
+        };
+      }
+
+      // Nếu có quyền thì gọi API và gắn thêm signal vào mỗi response
+      const data = await callApi({
         url: config.url.url,
         method: 'POST',
         body: apiBody,
         headers: {
           'Content-Type': 'application/json',
         },
-        source: config.signal
+        source: config.signal,
+      });
+
+      return { data: data, signal: config.signal };
+    }));
+
+    const currentDate = new Date();
+    let saveDate;
+
+    // Kiểm tra nếu là cuối tuần (thứ Bảy hoặc Chủ Nhật)
+    if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+      // Nếu là thứ Bảy hoặc Chủ Nhật, lấy ngày thứ Sáu gần nhất
+      const lastFriday = getLastFriday(currentDate);
+      saveDate = lastFriday; // Lưu ngày dưới dạng YYYY-MM-DD
+    } else {
+      // Nếu không phải cuối tuần, lưu ngày hiện tại
+      saveDate = currentDate.toISOString().split('T')[0];
+    }
+
+    // Lưu dữ liệu vào MongoDB cho những API có quyền truy cập
+    const saveDataPromises = responses.map(async (response) => {
+      // Nếu response có mã lỗi, không lưu vào DB
+      if (response.code === 403) {
+        return response; // Trả về lỗi, không lưu
       }
-      )
-    }))
 
-    // Xử lý kết quả
-    const finalData = responses.map(response => {
-      console.log(`response:: `, response)
-      return // signal: response.signal,
-      // data: response.data, // Dữ liệu từ API
-    })
+      // Điều kiện để kiểm tra tài liệu đã tồn tại chưa
+      const query = { signal: response.signal, date: saveDate };
 
-    console.log(finalData);
-    // Bạn có thể lưu finalData vào MongoDB tại đây
-    // return finalData;
+      // Dữ liệu để cập nhật hoặc tạo mới
+      const update = {
+        signal: response.signal,
+        data: response.data.metaData,
+        date: saveDate,
+      };
 
+      // Tùy chọn để tạo mới tài liệu nếu không tồn tại
+      const options = { upsert: true, new: true };
+
+      // Cập nhật hoặc tạo mới tài liệu trong MongoDB
+      await SignalToTrade.findOneAndUpdate(query, update, options);
+
+      return response; // Trả về response thành công
+    });
+
+    // Đợi tất cả các promise xử lý dữ liệu hoàn thành
+    const finalResults = await Promise.all(saveDataPromises);
+
+    return finalResults; // Trả về kết quả cho client
   } catch (error) {
     throw error
   }
+
 }
 
 module.exports = {
